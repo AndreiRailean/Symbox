@@ -22,7 +22,6 @@ SETUP:
 Load symbox.apache.conf into your apache. You should know how to do that already.
 You should be able to symlink it to the right location.
 
--------------
 Basic Directories:
 /www/symbox				-- symbox container. location accessible by web server
 /www/symbox/.public		-- default symfony install or static html files
