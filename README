@@ -1,0 +1,53 @@
+This is a helper for Symfony php development on localhost.
+
+In this guide, SYMBOX mainly means a Symfony install in a specific location.
+So if you have 10 sites configured, you have 10 symboxes.
+
+symbox.apache.conf file is a virtual host definition for Apache web server.
+Once the config file is installed and apache is restarted, 
+new symboxes can be added without server restart.
+
+When this file is installed, your web server will respond to following urls:
+symbox.local
+[EXAMPLE].symbox.local where [EXAMPLE] is an individual symbox
+
+Subdomains are enabled for each symbox, so that EXAMPLE symbox 
+is accessible by all of these domains:
+
+EXAMPLE.symbox.local 
+TEST.EXAMPLE.symbox.local
+SUB.TEST.EXAMPLE.symbox.local
+
+SETUP:
+Load symbox.apache.conf into your apache. You should know how to do that already.
+You should be able to symlink it to the right location.
+
+-------------
+Basic Directories:
+/www/symbox				-- symbox container. location accessible by web server
+/www/symbox/.public		-- default symfony install or static html files
+
+Symbox Directories:
+/www/symbox/EXAMPLE		-- EXAMPLE symbox
+/www/symbox/ANOTHER		-- ANOTHER symbox
+
+Tested with Symfony 1.4
+Depends on Symfony being installed in lib/vendor/symfony/data/web/sf inside symbox
+We have a Symfony dependency only for /sf* urls. 
+
+You can still use .htaccess files with this approach.
+You'll have to enable "RewriteBase /" because DOCUMENT_ROOT points to /www/symbox/.public.
+
+If you want to point a production domain to your symbox, like "www.example.com" 
+you'll need to create another apache conf file, like you usually do.
+
+If you want to be able to serve symboxes from a machine other than your localhost you can either:
+- add a server alias like *symbox.your.company.domain
+- use a URL-based proxy tunnel so that *.symbox.example.com is taken from *.symbox.local on a symbox server
+
+NON-Symfony Applications
+------------------------
+You can use this approach to host non-symfony PHP applications as long as they obey the following rules:
+- web-visible code (like index.php) must be located in symbox' /web directory (/www/symbox/EXAMPLE/web)
+- .htaccess files need to be placed in /web directory as well
+- must not use /sf* urls (because they will fail as they are hardwired to symfony)
